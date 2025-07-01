@@ -1,11 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 
-const userRouter = express.Router();
+const userRouter = Router();
 
-router.post('/', (req, res) => res.send({title: 'Create user'}));
-router.get('/:id', (req, res) => res.send({title: 'Get user'}));  
-router.put('/:id',(req, res) => res.send({title: 'Update user'}));    
-router.delete('/:id', (req, res) => res.send({title: 'Delete user'}));                
-router.get('/', (req, res) => res.send({ title: 'Get all users' })); // for admin                   
+userRouter.get('/:id', (req, res) => res.send({title: 'Get user'}));  
+userRouter.put('/:id',(req, res) => res.send({title: 'Update user'}));    
+userRouter.delete('/:id', (req, res) => res.send({title: 'Delete user'}));                
+userRouter.get('/', (req, res) => res.send({ title: 'Get all users' })); // for admin                   
 
 export default userRouter;

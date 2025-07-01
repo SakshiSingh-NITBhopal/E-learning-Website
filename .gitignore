@@ -1,0 +1,4 @@
+node_modules/
+env.js
+.env.development.local
+.env.production.local
