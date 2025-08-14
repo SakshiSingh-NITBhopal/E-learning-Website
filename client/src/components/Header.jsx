@@ -7,19 +7,34 @@ const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-
   return (
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3 md:px-8 flex items-center justify-between shadow bg-secondary text-text">
         {/* Logo */}
-        <div onClick={() => navigate('/')} className="cursor-pointer text-2xl font-bold flex items-center gap-2 text-primary font-display">
+        <div
+          onClick={() => navigate('/')}
+          className="cursor-pointer text-2xl font-bold flex items-center gap-2 text-primary font-display"
+        >
           <GiBookshelf className="w-7 h-7" />
           <span>Skill Shelf</span>
         </div>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex gap-6 mx-20 font-medium text-base lg:text-lg xl:text-xl items-center">
+        {/* Centered Links */}
+        <div className="hidden md:flex flex-1 justify-center gap-6 font-medium text-base lg:text-lg xl:text-xl items-center">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `transition-colors ${
+                isActive
+                  ? 'font-semibold text-primary'
+                  : 'text-muted hover:text-accent hover:scale-105'
+              }`
+            }
+          >
+            Overview
+          </NavLink>
           <NavLink
             to="/courses"
             className={({ isActive }) =>
@@ -42,13 +57,25 @@ const Header = () => {
               }`
             }
           >
-            dashboard
+            Dashboard
           </NavLink>
-          
+        </div>
+
+        {/* Sign In Button */}
+        <div className="hidden md:flex items-center">
+          <button
+            onClick={() => navigate('/signin')}
+            className="px-5 py-2 rounded bg-primary text-white font-semibold hover:bg-accent transition"
+          >
+            Sign In
+          </button>
         </div>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden text-primary" onClick={() => setSidebarOpen((prev) => !prev)}>
+        <button
+          className="md:hidden text-primary"
+          onClick={() => setSidebarOpen((prev) => !prev)}
+        >
           <FaBars size={24} />
         </button>
       </nav>
@@ -80,6 +107,20 @@ const Header = () => {
         {/* Sidebar Links */}
         <div className="md:hidden flex flex-col px-6 py-4 gap-6">
           <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `transition-colors ${
+                isActive
+                  ? 'font-semibold text-primary'
+                  : 'text-muted hover:text-primary'
+              }`
+            }
+            onClick={() => setSidebarOpen(false)}
+          >
+            Overview
+          </NavLink>
+          <NavLink
             to="/courses"
             className={({ isActive }) =>
               `transition-colors ${
@@ -103,10 +144,17 @@ const Header = () => {
             }
             onClick={() => setSidebarOpen(false)}
           >
-            dashboard
+            Dashboard
           </NavLink>
-        
-         
+          <button
+            onClick={() => {
+              setSidebarOpen(false);
+              navigate('/signin');
+            }}
+            className="px-5 py-2 rounded bg-primary text-white font-semibold hover:bg-accent transition"
+          >
+            Sign In
+          </button>
         </div>
       </div>
     </>
