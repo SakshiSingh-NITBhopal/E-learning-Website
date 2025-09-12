@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import { PORT } from "./config/env.js";
@@ -11,8 +12,9 @@ import enrollmentRouter from "./routes/enrollement.route.js";
 
 const app = express();
 
-app.use(express.json());
 
+app.use(express.json());
+app.use(cors());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

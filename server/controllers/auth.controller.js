@@ -13,12 +13,16 @@ export const signUp = async (req, res, next) => {
 
     // Required fields
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      const err = new Error("All fields are required");
+      err.statusCode = 400;
+      throw err;
     }
 
     // Email format validation
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      const err = new Error("Invalid email format");
+      err.statusCode = 400;
+      throw err;
     }
 
     // Hash the password
@@ -29,8 +33,12 @@ export const signUp = async (req, res, next) => {
       "SELECT * FROM users WHERE email = ?",
       [email]
     );
-    if (existingUser.length > 0)
-      return res.status(400).json({ message: "User already exists" });
+
+    if (existingUser.length > 0) {
+      const err = new Error("User already exists");
+      err.statusCode = 400;
+      throw err;
+    }
 
     // Insert user
     const [results] = await connection.query(
@@ -38,7 +46,6 @@ export const signUp = async (req, res, next) => {
       [name, email, hashedPassword]
     );
 
-    // Get new user ID
     const userId = results.insertId;
 
     // Get student role ID
@@ -53,24 +60,21 @@ export const signUp = async (req, res, next) => {
       "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)",
       [userId, roleId]
     );
-    if (defaultRole.affectedRows !== 1)
-      throw new Error("Failed to insert user role");
+    if (defaultRole.affectedRows !== 1) {
+      const err = new Error("Failed to insert user role");
+      err.statusCode = 500;
+      throw err;
+    }
 
-    const token = jwt.sign({ id: results.insertId }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
-    });
     await connection.commit();
+
     return res.status(201).json({
-      sucess: true,
-      message: "User registered successfully",
-      data: {
-        token,
-        id: results.insertId,
-      },
+      success: true,
+      message: "User registered successfully"
     });
   } catch (error) {
     await connection.rollback();
-    next(error);
+    next(error); 
   } finally {
     connection.release();
   }
@@ -102,7 +106,7 @@ export const signIn = async (req, res, next) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid Password" });
+      return res.status(401).json({ message: "Invalid Email or Password" });
     }
 
     const token = jwt.sign({ id: user.user_id }, JWT_SECRET, {
@@ -110,7 +114,7 @@ export const signIn = async (req, res, next) => {
     });
     return res
       .status(200)
-      .json({ success: true, message: "User signed-in", data: token });
+      .json({ success: true, message: "User signed-in", token });
   } catch (err) {
     next(err);
   }
