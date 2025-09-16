@@ -10,6 +10,7 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 import courseRouter from "./routes/course.route.js";
 import lessonsRouter from "./routes/lessons.route.js";
 import enrollmentRouter from "./routes/enrollement.route.js";
+import roleRouter from "./routes/role.route.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users/role", roleRouter)
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/lessons", lessonsRouter);
