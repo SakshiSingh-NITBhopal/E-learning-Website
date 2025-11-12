@@ -29,7 +29,6 @@ const CreateCourse = () => {
         }
       });
 
-
       // 2. The backend sends back the JSON response
       //    (data = { success: true, message: "...", data: { course_id: 123, ... } })
       toast.success(data.message || "Course created successfully!");
